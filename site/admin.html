@@ -214,7 +214,7 @@ tr:hover td { background: rgba(255,255,255,0.02); }
   border: 1px solid var(--border);
   border-radius: 14px;
   width: 100%;
-  max-width: 420px;
+  max-width: 440px;
   padding: 32px 28px;
   box-shadow: 0 12px 40px rgba(0,0,0,0.6);
 }
@@ -244,62 +244,37 @@ tr:hover td { background: rgba(255,255,255,0.02); }
 </head>
 <body>
 
-<!-- ÉCRAN DE CONNEXION / CRÉATION D'ACCÈS SIMPLIFIÉ -->
+<!-- ÉCRAN DE CONNEXION AVEC IDENTIFIANTS DE DÉPART CLAIRS -->
 <div id="login-screen">
   <div class="login-card">
     <div style="font-size:36px;text-align:center">🛠️</div>
-    <h2 style="text-align:center">AL-Phone Admin</h2>
+    <h2 style="text-align:center">Espace Administrateur</h2>
     <p style="color:var(--text-muted);font-size:13px;text-align:center;margin-bottom:20px">
-      Gestion du catalogue de la boutique
+      AL-Phone Niamey — Gestion du catalogue
     </p>
 
-    <!-- Onglets simplifiés -->
-    <div style="display:flex;gap:6px;margin-bottom:20px;background:#1f2937;padding:4px;border-radius:8px">
-      <button type="button" id="tab-login" class="btn-action" style="flex:1;background:var(--primary);color:#fff;border:0;padding:8px">1. Connexion</button>
-      <button type="button" id="tab-register" class="btn-action" style="flex:1;background:transparent;color:var(--text-muted);border:0;padding:8px">2. Premier accès / Activer</button>
-    </div>
-
-    <!-- 1. Formulaire Connexion -->
+    <!-- Formulaire direct de Connexion -->
     <div id="form-login-box">
       <div class="form-group" style="margin-bottom:14px">
-        <label>Numéro de téléphone</label>
-        <input id="l_phone" type="tel" value="91038061" placeholder="Ex: 91038061" style="font-size:16px;font-weight:600">
+        <label>Email ou Numéro de téléphone</label>
+        <input id="l_phone" type="text" value="admin@al-phone.com" placeholder="admin@al-phone.com ou 91038061" style="font-size:15px;font-weight:600">
       </div>
       <div class="form-group" style="margin-bottom:18px">
         <label>Mot de passe</label>
-        <input id="l_pass" type="password" placeholder="Votre mot de passe" autocomplete="current-password" style="font-size:16px">
+        <input id="l_pass" type="password" value="Admin123456!" placeholder="Mot de passe" autocomplete="current-password" style="font-size:15px">
       </div>
       <button class="btn-primary" id="btn-login" style="width:100%;justify-content:center;padding:12px;font-size:15px">
-        Se connecter →
+        Connexion Administrateur →
       </button>
 
-      <div style="margin-top:16px;padding:12px;background:rgba(255,255,255,0.03);border-radius:8px;font-size:12px;color:var(--text-muted);line-height:1.5">
-        ℹ️ <b>Vous n'avez pas encore de mot de passe ?</b><br>
-        Cliquez sur l'onglet <b>« 2. Premier accès / Activer »</b> pour définir votre mot de passe en 5 secondes.
-      </div>
-    </div>
-
-    <!-- 2. Formulaire Premier Accès / Définition du mot de passe -->
-    <div id="form-register-box" style="display:none">
-      <div class="form-group" style="margin-bottom:12px">
-        <label>Nom complet</label>
-        <input id="r_name" value="Directeur AL-Phone">
-      </div>
-      <div class="form-group" style="margin-bottom:12px">
-        <label>Numéro de téléphone</label>
-        <input id="r_phone" type="tel" value="91038061" style="font-size:16px;font-weight:600">
-        <span style="font-size:11px;color:#34d399">✓ Numéro de direction (+227 91 03 80 61)</span>
-      </div>
-      <div class="form-group" style="margin-bottom:18px">
-        <label>Choisissez votre mot de passe</label>
-        <input id="r_pass" type="password" placeholder="Min. 6 caractères" style="font-size:16px">
-      </div>
-      <button class="btn-primary" id="btn-register" style="width:100%;justify-content:center;padding:12px;font-size:15px">
-        Activer mon accès Admin →
-      </button>
-
-      <div style="margin-top:16px;padding:12px;background:rgba(255,255,255,0.03);border-radius:8px;font-size:12px;color:var(--text-muted);line-height:1.5">
-        💡 Cela va créer votre profil avec les pleins droits administrateur sur le catalogue.
+      <!-- Encadré Login de départ -->
+      <div style="margin-top:18px;padding:14px;background:#1e293b;border:1px solid #334155;border-radius:8px;font-size:13px;line-height:1.6">
+        <div style="font-weight:700;color:#f97316;margin-bottom:4px">🔑 Identifiants de départ officiels :</div>
+        <div>• <b>Identifiant :</b> <code style="color:#38bdf8">admin@al-phone.com</code> (ou <code style="color:#38bdf8">91038061</code>)</div>
+        <div>• <b>Mot de passe :</b> <code style="color:#38bdf8">Admin123456!</code></div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:6px">
+          💡 Vous pourrez changer ce mot de passe à tout moment une fois connecté en cliquant sur le bouton prévu dans le menu.
+        </div>
       </div>
     </div>
   </div>
@@ -405,7 +380,7 @@ tr:hover td { background: rgba(255,255,255,0.02); }
         <thead>
           <tr>
             <th>Nom</th>
-            <th>Téléphone</th>
+            <th>Téléphone / Email</th>
             <th>Rôle</th>
             <th>Statut</th>
             <th>Actions</th>
@@ -504,7 +479,7 @@ tr:hover td { background: rgba(255,255,255,0.02); }
     </div>
     <div style="display:flex;justify-content:flex-end;gap:10px">
       <button type="button" class="btn-action" id="modal-pwd-cancel">Annuler</button>
-      <button type="button" class="btn-primary" id="btn-save-pwd">Mettre à jour</button>
+      <button type="button" class="btn-primary" id="btn-save-pwd">Enregistrer</button>
     </div>
   </div>
 </div>
@@ -716,36 +691,17 @@ function openEditModal(id) {
 
 function closeModal() { $("#modal-product").style.display = "none"; }
 
-/* Onglets Connexion / Premier accès */
-$("#tab-login").onclick = () => {
-  $("#form-login-box").style.display = "block";
-  $("#form-register-box").style.display = "none";
-  $("#tab-login").style.background = "var(--primary)";
-  $("#tab-login").style.color = "#fff";
-  $("#tab-register").style.background = "transparent";
-  $("#tab-register").style.color = "var(--text-muted)";
-};
-
-$("#tab-register").onclick = () => {
-  $("#form-login-box").style.display = "none";
-  $("#form-register-box").style.display = "block";
-  $("#tab-register").style.background = "var(--primary)";
-  $("#tab-register").style.color = "#fff";
-  $("#tab-login").style.background = "transparent";
-  $("#tab-login").style.color = "var(--text-muted)";
-};
-
 /* Actions Auth */
 $("#btn-login").onclick = async () => {
-  const phone = $("#l_phone").value.trim();
+  const idVal = $("#l_phone").value.trim();
   const pass = $("#l_pass").value;
-  if (!phone || !pass) return toast("Remplissez le téléphone et le mot de passe");
+  if (!idVal || !pass) return toast("Remplissez l'identifiant et le mot de passe");
 
   const btn = $("#btn-login");
   btn.disabled = true;
-  btn.textContent = "Connexion...";
+  btn.textContent = "Connexion en cours...";
   try {
-    await API.login(phone, pass);
+    await API.login(idVal, pass);
     const me = await API.me();
     if (!me || !me.is_admin) {
       await API.logout();
@@ -760,35 +716,7 @@ $("#btn-login").onclick = async () => {
     toast(err.message || "Échec de connexion");
   } finally {
     btn.disabled = false;
-    btn.textContent = "Se connecter →";
-  }
-};
-
-$("#btn-register").onclick = async () => {
-  const name = $("#r_name").value.trim();
-  const phone = $("#r_phone").value.trim();
-  const pass = $("#r_pass").value;
-  if (!name) return toast("Nom requis");
-  if (!phone) return toast("Numéro requis");
-  if (!pass || pass.length < 6) return toast("Mot de passe : min. 6 caractères");
-
-  const btn = $("#btn-register");
-  btn.disabled = true;
-  btn.textContent = "Activation en cours...";
-  try {
-    await API.register(name, phone, pass);
-    await API.login(phone, pass);
-    const me = await API.me();
-    CURRENT_ADMIN = me;
-    $("#login-screen").style.display = "none";
-    $("#admin-name").textContent = me.name || "Directeur AL-Phone";
-    toast("Accès Administrateur créé avec succès ✓");
-    await refreshData();
-  } catch (err) {
-    toast(err.message || "Erreur lors de l'activation");
-  } finally {
-    btn.disabled = false;
-    btn.textContent = "Activer mon accès Admin →";
+    btn.textContent = "Connexion Administrateur →";
   }
 };
 

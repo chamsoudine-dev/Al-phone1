@@ -4,10 +4,13 @@ const SUPABASE_ANON_KEY = "sb_publishable_a6D6IwgEyC8FyPWaZfQdDA_LBKDJYd8";
 
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-/* Convertit 91038061 → 22791038061@clients.al-phone.app */
+/* Convertit un identifiant (email ou numéro de téléphone) en email pour Supabase Auth */
 const cleanPhone = input => {
   const str = String(input || "").trim();
+  if (!str) return "";
+  // Si c'est déjà un email (ex: admin@al-phone.com)
   if (str.includes("@")) return str.toLowerCase();
+  // Si c'est un numéro de téléphone
   let digits = str.replace(/\D/g, "");
   if (digits.length === 8) digits = "227" + digits;
   return digits + "@clients.al-phone.app";
@@ -20,7 +23,7 @@ const API = {
     const { data, error } = await sb.auth.signInWithPassword({ email, password });
     if (error) {
       if (/invalid login credentials/i.test(error.message)) {
-        throw new Error("Numéro ou mot de passe incorrect.");
+        throw new Error("Identifiant (email/téléphone) ou mot de passe incorrect.");
       }
       throw new Error(error.message);
     }
@@ -40,7 +43,10 @@ const API = {
     });
     if (error) {
       if (/already|registered/i.test(error.message)) {
-        throw new Error("Ce numéro est déjà inscrit. Connectez-vous avec votre mot de passe.");
+        throw new Error("Ce compte existe déjà. Connectez-vous directement.");
+      }
+      if (/rate limit/i.test(error.message)) {
+        throw new Error("Limite d'envoi d'e-mail atteinte. Utilisez le compte de départ dans Supabase.");
       }
       throw new Error(error.message);
     }
@@ -64,7 +70,7 @@ const API = {
       .eq("id", user.id)
       .maybeSingle();
 
-    const isOwner = (user.email && user.email.includes("91038061")) ||
+    const isOwner = (user.email && (user.email.includes("91038061") || user.email.includes("admin"))) ||
                     (user.user_metadata && user.user_metadata.phone &&
                      user.user_metadata.phone.includes("91038061"));
 
