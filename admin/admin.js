@@ -235,11 +235,13 @@ function closeModal() {
 }
 
 function normalizePhone(p) {
-  let clean = String(p || "").replace(/\D/g, "");
+  let str = String(p || "").trim();
+  if (str.includes("@")) return str.toLowerCase();
+  let clean = str.replace(/\D/g, "");
   if (!clean) return "";
   if (clean.length === 8) return "+227" + clean;
   if (clean.startsWith("227") && clean.length === 11) return "+" + clean;
-  return p.trim().startsWith("+") ? ("+" + clean) : ("+" + clean);
+  return str.startsWith("+") ? ("+" + clean) : ("+" + clean);
 }
 
 /* ── Événements ─────────────────────────────────────── */
@@ -283,7 +285,7 @@ $("#tab-forgot").onclick = () => {
 $("#btn-login").onclick = async () => {
   const phone = normalizePhone($("#l_phone").value);
   const pass = $("#l_pass").value;
-  if (!phone || !pass) return toast("Remplissez le téléphone et mot de passe");
+  if (!phone || !pass) return toast("Remplissez l'identifiant (email ou téléphone) et le mot de passe");
   
   const btn = $("#btn-login");
   btn.disabled = true;
