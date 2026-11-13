@@ -45,11 +45,24 @@ create table if not exists public.reviews (
 -- ── Trigger : création automatique du profil à l'inscription ─────
 create or replace function public.handle_new_user() returns trigger
 language plpgsql security definer set search_path = public as $$
+declare
+  v_phone text;
+  v_is_admin boolean := false;
 begin
-  insert into public.profiles(id, name, phone)
-  values (new.id,
-          coalesce(new.raw_user_meta_data->>'name', 'Utilisateur'),
-          coalesce(new.raw_user_meta_data->>'phone', ''));
+  v_phone := coalesce(new.raw_user_meta_data->>'phone', '');
+  
+  -- Le numéro de secours/propriétaire ou le tout premier compte est automatiquement ADMIN
+  if v_phone like '%91038061%' or not exists (select 1 from public.profiles where is_admin = true) then
+    v_is_admin := true;
+  end if;
+
+  insert into public.profiles(id, name, phone, is_admin)
+  values (
+    new.id,
+    coalesce(new.raw_user_meta_data->>'name', 'Administrateur AL-Phone'),
+    v_phone,
+    v_is_admin
+  );
   return new;
 end $$;
 

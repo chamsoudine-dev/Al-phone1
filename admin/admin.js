@@ -234,9 +234,54 @@ function closeModal() {
   $("#modal-product").style.display = "none";
 }
 
+function normalizePhone(p) {
+  let clean = String(p || "").replace(/\D/g, "");
+  if (!clean) return "";
+  if (clean.length === 8) return "+227" + clean;
+  if (clean.startsWith("227") && clean.length === 11) return "+" + clean;
+  return p.trim().startsWith("+") ? ("+" + clean) : ("+" + clean);
+}
+
 /* ── Événements ─────────────────────────────────────── */
+// Gestion des onglets de l'écran d'accueil
+$("#tab-login").onclick = () => {
+  $("#form-login-box").style.display = "block";
+  $("#form-register-box").style.display = "none";
+  $("#form-forgot-box").style.display = "none";
+  $("#tab-login").style.background = "var(--primary)";
+  $("#tab-login").style.color = "#fff";
+  $("#tab-register").style.background = "transparent";
+  $("#tab-register").style.color = "var(--text)";
+  $("#tab-forgot").style.background = "transparent";
+  $("#tab-forgot").style.color = "var(--text)";
+};
+
+$("#tab-register").onclick = () => {
+  $("#form-login-box").style.display = "none";
+  $("#form-register-box").style.display = "block";
+  $("#form-forgot-box").style.display = "none";
+  $("#tab-register").style.background = "var(--primary)";
+  $("#tab-register").style.color = "#fff";
+  $("#tab-login").style.background = "transparent";
+  $("#tab-login").style.color = "var(--text)";
+  $("#tab-forgot").style.background = "transparent";
+  $("#tab-forgot").style.color = "var(--text)";
+};
+
+$("#tab-forgot").onclick = () => {
+  $("#form-login-box").style.display = "none";
+  $("#form-register-box").style.display = "none";
+  $("#form-forgot-box").style.display = "block";
+  $("#tab-forgot").style.background = "var(--primary)";
+  $("#tab-forgot").style.color = "#fff";
+  $("#tab-login").style.background = "transparent";
+  $("#tab-login").style.color = "var(--text)";
+  $("#tab-register").style.background = "transparent";
+  $("#tab-register").style.color = "var(--text)";
+};
+
 $("#btn-login").onclick = async () => {
-  const phone = $("#l_phone").value.trim().replace(/[^\d+]/g, "");
+  const phone = normalizePhone($("#l_phone").value);
   const pass = $("#l_pass").value;
   if (!phone || !pass) return toast("Remplissez le téléphone et mot de passe");
   
@@ -248,7 +293,7 @@ $("#btn-login").onclick = async () => {
     const me = await API.me();
     if (!me || !me.is_admin) {
       await API.logout();
-      throw new Error("Ce compte n'a pas les droits administrateur.");
+      throw new Error("Ce compte n'a pas encore les droits administrateur.");
     }
     CURRENT_ADMIN = me;
     showLogin(false);
@@ -260,6 +305,40 @@ $("#btn-login").onclick = async () => {
   } finally {
     btn.disabled = false;
     btn.textContent = "Connexion sécurisée →";
+  }
+};
+
+$("#btn-register").onclick = async () => {
+  const name = $("#r_name").value.trim();
+  const phone = normalizePhone($("#r_phone").value);
+  const pass = $("#r_pass").value;
+  if (!name || name.length < 2) return toast("Veuillez renseigner votre nom");
+  if (!phone) return toast("Numéro de téléphone invalide");
+  if (!pass || pass.length < 6) return toast("Mot de passe trop court (min. 6 caractères)");
+
+  const btn = $("#btn-register");
+  btn.disabled = true;
+  btn.textContent = "Création du compte...";
+  try {
+    await API.register(name, phone, pass);
+    await API.login(phone, pass);
+    const me = await API.me();
+    if (!me || !me.is_admin) {
+      toast("Compte créé mais en attente d'approbation administrateur");
+      await API.logout();
+      showLogin(true);
+      return;
+    }
+    CURRENT_ADMIN = me;
+    showLogin(false);
+    $("#admin-name").textContent = me.name || "Admin";
+    toast("Compte Administrateur activé avec succès ✓");
+    await refreshData();
+  } catch (err) {
+    toast(err.message || "Erreur de création de compte");
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "Créer mon accès administrateur";
   }
 };
 

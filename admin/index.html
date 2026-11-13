@@ -378,24 +378,66 @@ input:focus, select:focus, textarea:focus { outline: 2px solid var(--primary); }
 </head>
 <body>
 
-<!-- ÉCRAN DE CONNEXION ADMIN -->
+<!-- ÉCRAN DE CONNEXION / CRÉATION ADMIN -->
 <div id="login-screen">
   <div class="login-card">
     <div style="font-size:36px;margin-bottom:12px">🛠️</div>
     <h2>Espace Administrateur</h2>
-    <p style="color:var(--text-muted);font-size:14px;margin-bottom:20px">AL-Phone Niamey — Gestion du catalogue</p>
-    
-    <div class="form-group">
-      <label>Téléphone</label>
-      <input id="l_phone" type="tel" placeholder="+227 90 00 00 00" autocomplete="tel">
+    <p style="color:var(--text-muted);font-size:14px;margin-bottom:16px">AL-Phone Niamey — Gestion du catalogue</p>
+
+    <div style="display:flex;gap:6px;margin-bottom:20px;border-bottom:1px solid var(--border);padding-bottom:10px">
+      <button type="button" id="tab-login" class="btn-action" style="flex:1;background:var(--primary);color:#fff">Connexion</button>
+      <button type="button" id="tab-register" class="btn-action" style="flex:1">Créer mon compte</button>
+      <button type="button" id="tab-forgot" class="btn-action" style="flex:1">Aide / Secours</button>
     </div>
-    <div class="form-group">
-      <label>Mot de passe</label>
-      <input id="l_pass" type="password" placeholder="••••••••" autocomplete="current-password">
+
+    <!-- 1. Formulaire Connexion -->
+    <div id="form-login-box">
+      <div class="form-group">
+        <label>Numéro de téléphone</label>
+        <input id="l_phone" type="tel" placeholder="Ex : 91 03 80 61 ou +227..." autocomplete="tel" value="91038061">
+      </div>
+      <div class="form-group">
+        <label>Mot de passe</label>
+        <input id="l_pass" type="password" placeholder="••••••••" autocomplete="current-password">
+      </div>
+      <button class="btn-primary" id="btn-login" style="width:100%;justify-content:center;margin-top:12px;padding:12px">
+        Connexion sécurisée →
+      </button>
     </div>
-    <button class="btn-primary" id="btn-login" style="width:100%;justify-content:center;margin-top:12px;padding:12px">
-      Connexion sécurisée →
-    </button>
+
+    <!-- 2. Formulaire Inscription Admin -->
+    <div id="form-register-box" style="display:none">
+      <div class="form-group">
+        <label>Votre Nom</label>
+        <input id="r_name" placeholder="Ex : Direction AL-Phone">
+      </div>
+      <div class="form-group">
+        <label>Numéro de téléphone</label>
+        <input id="r_phone" type="tel" placeholder="Ex : 91 03 80 61" value="91038061">
+        <span style="font-size:11px;color:#34d399">✓ Le numéro 91 03 80 61 est automatiquement reconnu Super-Admin</span>
+      </div>
+      <div class="form-group">
+        <label>Choisissez votre mot de passe</label>
+        <input id="r_pass" type="password" placeholder="8 caractères minimum">
+      </div>
+      <button class="btn-primary" id="btn-register" style="width:100%;justify-content:center;margin-top:12px;padding:12px">
+        Créer mon accès administrateur
+      </button>
+    </div>
+
+    <!-- 3. Aide & Numéro de secours -->
+    <div id="form-forgot-box" style="display:none;font-size:13px;line-height:1.6;color:var(--text-muted)">
+      <p style="margin-bottom:12px"><b style="color:var(--text)">Numéro de secours officiel :</b> <span style="color:var(--primary);font-weight:700">+227 91 03 80 61</span></p>
+      <p style="margin-bottom:12px">Si vous avez oublié votre mot de passe :</p>
+      <ol style="margin-left:18px;margin-bottom:14px">
+        <li>Rendez-vous sur <a href="https://supabase.com/dashboard" target="_blank" style="color:var(--primary)">Supabase Dashboard</a>.</li>
+        <li>Allez dans <b>Authentication</b> &gt; <b>Users</b>.</li>
+        <li>Trouvez votre numéro (ex: <code style="color:#fff">22791038061@clients.al-phone.app</code>).</li>
+        <li>Cliquez sur les <b>3 points (...)</b> &gt; <b>Send Password Recovery</b> ou modifiez le mot de passe directement.</li>
+      </ol>
+      <button type="button" class="btn-action" style="width:100%;padding:10px" onclick="document.getElementById('tab-login').click()">← Retour à la connexion</button>
+    </div>
   </div>
 </div>
 
