@@ -1,9 +1,10 @@
 /* api.js — Couche Supabase unifiée AL-Phone */
-const SUPABASE_URL     = "https://xcnbergspbpurzsbksgs.supabase.co";
+const SUPABASE_URL      = "https://xcnbergspbpurzsbksgs.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_a6D6IwgEyC8FyPWaZfQdDA_LBKDJYd8";
 
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+/* Convertit 91038061 → 22791038061@clients.al-phone.app */
 const cleanPhone = input => {
   const str = String(input || "").trim();
   if (str.includes("@")) return str.toLowerCase();
@@ -13,13 +14,13 @@ const cleanPhone = input => {
 };
 
 const API = {
-  /* ── Authentification ────────────────────────────── */
+  /* ── Authentification ─────────────────────────────── */
   async login(phoneOrEmail, password) {
     const email = cleanPhone(phoneOrEmail);
     const { data, error } = await sb.auth.signInWithPassword({ email, password });
     if (error) {
       if (/invalid login credentials/i.test(error.message)) {
-        throw new Error("Numéro ou mot de passe incorrect. Si vous n'avez pas encore défini de mot de passe, cliquez sur 'Créer / Réinitialiser mon mot de passe'.");
+        throw new Error("Numéro ou mot de passe incorrect.");
       }
       throw new Error(error.message);
     }
@@ -30,7 +31,7 @@ const API = {
     const email = cleanPhone(phoneOrEmail);
     let digits = String(phoneOrEmail || "").replace(/\D/g, "");
     if (digits.length === 8) digits = "+227" + digits;
-    else if (!digits.startsWith("+") && digits.length > 0) digits = "+" + digits;
+    else if (digits.length > 0 && !digits.startsWith("+")) digits = "+" + digits;
 
     const { data, error } = await sb.auth.signUp({
       email,
@@ -46,24 +47,35 @@ const API = {
     return data.user;
   },
 
+  async changePassword(newPassword) {
+    const { data, error } = await sb.auth.updateUser({ password: newPassword });
+    if (error) throw new Error(error.message);
+    return data;
+  },
+
   logout: () => sb.auth.signOut(),
 
   async me() {
     const { data: { user } } = await sb.auth.getUser();
     if (!user) return null;
 
-    let { data } = await sb.from("profiles").select("id,name,phone,is_admin,blocked").eq("id", user.id).maybeSingle();
+    let { data } = await sb.from("profiles")
+      .select("id,name,phone,is_admin,blocked")
+      .eq("id", user.id)
+      .maybeSingle();
 
     const isOwner = (user.email && user.email.includes("91038061")) ||
-                    (user.user_metadata?.phone && user.user_metadata.phone.includes("91038061"));
+                    (user.user_metadata && user.user_metadata.phone &&
+                     user.user_metadata.phone.includes("91038061"));
 
-    // Création automatique du profil s'il n'existe pas encore
     if (!data) {
       const newProf = {
         id: user.id,
-        name: user.user_metadata?.name || "Directeur AL-Phone",
-        phone: user.user_metadata?.phone || "+22791038061",
-        is_admin: true, // Le compte connecté reçoit les droits admin
+        name: user.user_metadata && user.user_metadata.name
+              ? user.user_metadata.name : "Directeur AL-Phone",
+        phone: user.user_metadata && user.user_metadata.phone
+               ? user.user_metadata.phone : "+22791038061",
+        is_admin: true,
       };
       await sb.from("profiles").upsert(newProf);
       data = newProf;
@@ -76,7 +88,7 @@ const API = {
     return data;
   },
 
-  /* ── Catalogue public (articles actifs uniquement) ── */
+  /* ── Catalogue public (articles actifs) ───────────── */
   async products() {
     const { data, error } = await sb.from("products")
       .select("*, reviews(author,rating,body,created_at)")
@@ -97,7 +109,9 @@ const API = {
       desc:     p.descr,
       active:   p.active,
       order:    p.display_order || 0,
-      comments: (p.reviews || []).map(r => ({ u: r.author, t: r.body, r: r.rating, d: r.created_at.slice(0, 10) })),
+      comments: (p.reviews || []).map(r => ({
+        u: r.author, t: r.body, r: r.rating, d: r.created_at.slice(0, 10)
+      })),
     }));
   },
 
@@ -113,19 +127,20 @@ const API = {
 
   async saveProduct(p) {
     const row = {
-      name: p.name,
-      cat: p.cat,
-      price: Math.max(0, +p.price || 0),
-      old_price: Math.max(0, +p.old_price || 0),
-      stock: Math.max(0, +p.stock || 0),
-      emoji: p.emoji || "📦",
-      img_url: p.img_url || null,
-      descr: p.descr || "",
+      name:          p.name,
+      cat:           p.cat,
+      price:         Math.max(0, +p.price || 0),
+      old_price:     Math.max(0, +p.old_price || 0),
+      stock:         Math.max(0, +p.stock || 0),
+      emoji:         p.emoji || "📦",
+      img_url:       p.img_url || null,
+      descr:         p.descr || "",
       display_order: +p.display_order || 0,
-      active: p.active !== false,
+      active:        p.active !== false,
     };
-    const q = p.id ? sb.from("products").update(row).eq("id", p.id)
-                   : sb.from("products").insert(row);
+    const q = p.id
+      ? sb.from("products").update(row).eq("id", p.id)
+      : sb.from("products").insert(row);
     const { error } = await q;
     if (error) throw error;
   },
@@ -162,8 +177,10 @@ const API = {
   /* ── Upload d'images ──────────────────────────────── */
   async uploadImage(file) {
     const cleanName = file.name.replace(/[^\w.]/g, "_");
-    const path = `${Date.now()}_${cleanName}`;
-    const { error } = await sb.storage.from("product-images").upload(path, file, { contentType: file.type });
+    const path = Date.now() + "_" + cleanName;
+    const { error } = await sb.storage
+      .from("product-images")
+      .upload(path, file, { contentType: file.type });
     if (error) throw error;
     return sb.storage.from("product-images").getPublicUrl(path).data.publicUrl;
   },

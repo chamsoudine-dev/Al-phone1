@@ -3,25 +3,25 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Panneau d'administration — AL-Phone Niamey</title>
+<title>Administration — AL-Phone Niamey</title>
 <style>
 :root {
-  --bg: #0f172a;
-  --sidebar: #1e293b;
-  --card: #1e293b;
-  --card-hover: #273549;
-  --border: #334155;
-  --text: #f8fafc;
-  --text-muted: #94a3b8;
+  --bg: #0b0f19;
+  --sidebar: #111827;
+  --card: #1f2937;
+  --card-hover: #374151;
+  --border: #374151;
+  --text: #f9fafb;
+  --text-muted: #9ca3af;
   --primary: #f97316;
   --primary-hover: #ea580c;
   --success: #10b981;
   --danger: #ef4444;
-  --radius: 12px;
+  --radius: 10px;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   background: var(--bg);
   color: var(--text);
   min-height: 100vh;
@@ -39,228 +39,135 @@ aside.sidebar {
   padding: 20px 16px;
 }
 .brand {
-  font-size: 19px;
+  font-size: 18px;
   font-weight: 800;
-  color: var(--text);
   display: flex;
   align-items: center;
   gap: 10px;
   padding-bottom: 20px;
   border-bottom: 1px solid var(--border);
 }
-.brand span { color: var(--primary); }
-nav.menu {
-  margin-top: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  flex: 1;
-}
-.menu button, .menu a {
+.brand span { font-size: 24px; }
+nav.menu { display: flex; flex-direction: column; gap: 6px; margin-top: 20px; flex: 1; }
+nav.menu button, nav.menu a {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 11px 14px;
-  border-radius: var(--radius);
-  background: transparent;
+  gap: 10px;
+  background: none;
   border: 0;
   color: var(--text-muted);
   font: inherit;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 500;
+  padding: 10px 12px;
+  border-radius: var(--radius);
   cursor: pointer;
   text-decoration: none;
-  transition: all .2s;
+  transition: all 0.15s;
   text-align: left;
 }
-.menu button:hover, .menu a:hover {
-  background: rgba(255,255,255,0.06);
-  color: var(--text);
-}
-.menu button.active {
-  background: var(--primary);
-  color: #fff;
-}
-.aside-foot {
-  border-top: 1px solid var(--border);
-  padding-top: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-.admin-badge {
-  font-size: 13px;
-  color: var(--text-muted);
-}
+nav.menu button:hover, nav.menu a:hover { background: rgba(255,255,255,0.05); color: var(--text); }
+nav.menu button.active { background: var(--primary); color: #fff; font-weight: 600; }
+.aside-foot { border-top: 1px solid var(--border); padding-top: 16px; display: flex; flex-direction: column; gap: 8px; }
+.admin-badge { font-size: 13px; color: var(--text-muted); line-height: 1.4; }
 .admin-badge b { color: var(--text); display: block; }
-.btn-logout {
-  background: rgba(239, 68, 68, 0.15);
-  color: #fca5a5;
-  border: 1px solid rgba(239, 68, 68, 0.3);
-  padding: 8px 12px;
-  border-radius: 8px;
-  font: inherit;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-}
-.btn-logout:hover { background: var(--danger); color: #fff; }
-
-main.content {
-  flex: 1;
-  padding: 28px 36px;
-  max-width: 1300px;
-  overflow-y: auto;
-}
-header.topbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 24px;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-h1 { font-size: 24px; font-weight: 800; }
-.kpis {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 16px;
-  margin-bottom: 28px;
-}
-.kpi {
-  background: var(--card);
+.btn-foot {
+  background: #1f2937;
   border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 18px 20px;
-}
-.kpi .num {
-  font-size: 28px;
-  font-weight: 800;
-  color: var(--primary);
-  margin-top: 4px;
-}
-.kpi .lbl {
+  color: var(--text);
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
   font-size: 13px;
-  color: var(--text-muted);
-  font-weight: 600;
-  text-transform: uppercase;
+  transition: 0.15s;
+  text-align: center;
 }
+.btn-foot:hover { background: #374151; }
+.btn-foot.danger { color: #fca5a5; border-color: rgba(239,68,68,0.4); }
+.btn-foot.danger:hover { background: rgba(239,68,68,0.2); }
 
-.actions-bar {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-  margin-bottom: 20px;
-  flex-wrap: wrap;
-}
-.search-box {
-  flex: 1;
-  min-width: 220px;
-}
-.search-box input, .actions-bar select {
+main.content { flex: 1; padding: 28px 32px; overflow-y: auto; max-width: 1400px; }
+.topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 14px; }
+.topbar h1 { font-size: 24px; font-weight: 800; }
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-bottom: 24px; }
+.kpi { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 20px; }
+.kpi .lbl { font-size: 13px; color: var(--text-muted); margin-bottom: 6px; }
+.kpi .num { font-size: 26px; font-weight: 800; }
+.actions-bar { display: flex; gap: 12px; margin-bottom: 18px; flex-wrap: wrap; }
+.search-box { flex: 1; min-width: 240px; position: relative; }
+.search-box input {
   width: 100%;
   background: var(--card);
   border: 1px solid var(--border);
   color: var(--text);
   padding: 10px 14px;
-  border-radius: 9px;
+  border-radius: var(--radius);
   font: inherit;
   font-size: 14px;
+}
+select.select-filter {
+  background: var(--card);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 10px 14px;
+  border-radius: var(--radius);
+  font: inherit;
+  font-size: 14px;
+  cursor: pointer;
 }
 .btn-primary {
   background: var(--primary);
   color: #fff;
   border: 0;
-  padding: 10px 18px;
-  border-radius: 9px;
   font: inherit;
-  font-weight: 700;
   font-size: 14px;
+  font-weight: 700;
+  padding: 10px 18px;
+  border-radius: var(--radius);
   cursor: pointer;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 8px;
-  transition: background .2s;
+  transition: background 0.15s;
 }
 .btn-primary:hover { background: var(--primary-hover); }
-
-.card-table {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  overflow-x: auto;
-}
-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 14px;
-}
-th {
-  background: rgba(0,0,0,0.2);
-  padding: 12px 16px;
-  text-align: left;
-  color: var(--text-muted);
-  font-size: 12px;
-  text-transform: uppercase;
-  border-bottom: 1px solid var(--border);
-}
-td {
-  padding: 14px 16px;
-  border-bottom: 1px solid var(--border);
-  vertical-align: middle;
-}
-tr:hover td { background: var(--card-hover); }
-.product-cell {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-.product-img {
-  width: 46px;
-  height: 46px;
-  border-radius: 8px;
-  background: #334155;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 22px;
-  overflow: hidden;
-  flex-shrink: 0;
-}
-.product-img img { width: 100%; height: 100%; object-fit: cover; }
-.badge {
-  display: inline-block;
-  padding: 4px 9px;
-  border-radius: 99px;
-  font-size: 11px;
-  font-weight: 700;
-}
-.badge-active { background: rgba(16, 185, 129, 0.2); color: #34d399; }
-.badge-hidden { background: rgba(239, 68, 68, 0.2); color: #f87171; }
-.badge-low { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
 .btn-action {
-  background: transparent;
+  background: #374151;
   border: 1px solid var(--border);
   color: var(--text);
-  padding: 6px 12px;
-  border-radius: 7px;
-  font: inherit;
-  font-size: 12px;
+  padding: 6px 10px;
+  border-radius: 6px;
   cursor: pointer;
-  margin-right: 4px;
+  font-size: 12px;
+  font-weight: 600;
 }
-.btn-action:hover { background: rgba(255,255,255,0.1); }
-.btn-action.danger { color: #f87171; border-color: rgba(239, 68, 68, 0.3); }
-.btn-action.danger:hover { background: var(--danger); color: #fff; }
+.btn-action:hover { background: #4b5563; }
+.btn-action.danger { color: #fca5a5; }
+.btn-action.danger:hover { background: rgba(239,68,68,0.3); }
 
-/* Modal */
+.card-table { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+table { width: 100%; border-collapse: collapse; text-align: left; font-size: 14px; }
+th { background: #111827; color: var(--text-muted); font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; padding: 12px 16px; border-bottom: 1px solid var(--border); }
+td { padding: 14px 16px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+tr:last-child td { border-bottom: 0; }
+tr:hover td { background: rgba(255,255,255,0.02); }
+
+.product-cell { display: flex; align-items: center; gap: 12px; }
+.product-img { width: 44px; height: 44px; border-radius: 8px; background: #111827; border: 1px solid var(--border); display: grid; place-items: center; overflow: hidden; font-size: 20px; flex-shrink: 0; }
+.product-img img { width: 100%; height: 100%; object-fit: cover; }
+.badge { display: inline-block; padding: 4px 8px; border-radius: 6px; font-size: 12px; font-weight: 600; }
+.badge-active { background: rgba(16,185,129,0.2); color: #34d399; }
+.badge-hidden { background: rgba(239,68,68,0.2); color: #f87171; }
+.badge-low    { background: rgba(245,158,11,0.2); color: #fbbf24; }
+
+/* Modale */
 .modal-overlay {
   position: fixed;
   inset: 0;
   background: rgba(0,0,0,0.75);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  backdrop-filter: blur(4px);
+  display: none;
+  place-items: center;
   z-index: 100;
   padding: 16px;
 }
@@ -268,53 +175,30 @@ tr:hover td { background: var(--card-hover); }
   background: var(--sidebar);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  max-width: 620px;
   width: 100%;
+  max-width: 600px;
   max-height: 90vh;
   overflow-y: auto;
   padding: 24px;
 }
-.modal-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-  padding-bottom: 12px;
-  border-bottom: 1px solid var(--border);
-}
-.modal-head h3 { font-size: 18px; font-weight: 700; }
-.modal-close {
-  background: none;
-  border: 0;
-  color: var(--text-muted);
-  font-size: 24px;
-  cursor: pointer;
-}
-.form-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px;
-}
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  margin-bottom: 14px;
-}
+.modal-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 12px; }
+.modal-close { background: none; border: 0; color: var(--text-muted); font-size: 22px; cursor: pointer; }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.form-group { display: flex; flex-direction: column; gap: 6px; }
 .form-group.full { grid-column: span 2; }
-label { font-size: 12px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; }
-input, select, textarea {
-  background: var(--bg);
+.form-group label { font-size: 13px; color: var(--text-muted); font-weight: 500; }
+.form-group input, .form-group select, .form-group textarea {
+  background: var(--card);
   border: 1px solid var(--border);
   color: var(--text);
-  padding: 10px 12px;
+  padding: 9px 12px;
   border-radius: 8px;
   font: inherit;
   font-size: 14px;
 }
-input:focus, select:focus, textarea:focus { outline: 2px solid var(--primary); }
+.form-group textarea { resize: vertical; min-height: 70px; }
 
-/* Écran Login */
+/* Écran de connexion */
 #login-screen {
   position: fixed;
   inset: 0;
@@ -328,13 +212,13 @@ input:focus, select:focus, textarea:focus { outline: 2px solid var(--primary); }
 .login-card {
   background: var(--sidebar);
   border: 1px solid var(--border);
-  border-radius: var(--radius);
+  border-radius: 14px;
   width: 100%;
-  max-width: 440px;
+  max-width: 420px;
   padding: 32px 28px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.6);
 }
-.login-card h2 { margin-bottom: 6px; font-size: 22px; }
+.login-card h2 { margin: 8px 0 4px; font-size: 22px; font-weight: 800; }
 .toast {
   position: fixed;
   bottom: 24px;
@@ -347,12 +231,12 @@ input:focus, select:focus, textarea:focus { outline: 2px solid var(--primary); }
   font-size: 14px;
   font-weight: 600;
   z-index: 300;
-  box-shadow: 0 4px 14px rgba(0,0,0,0.4);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.4);
 }
 @media (max-width: 768px) {
   body { flex-direction: column; }
   aside.sidebar { width: 100%; height: auto; position: static; border-right: 0; border-bottom: 1px solid var(--border); }
-  main.content { padding: 18px 16px; }
+  main.content { padding: 18px 14px; }
   .form-grid { grid-template-columns: 1fr; }
   .form-group.full { grid-column: span 1; }
 }
@@ -360,54 +244,63 @@ input:focus, select:focus, textarea:focus { outline: 2px solid var(--primary); }
 </head>
 <body>
 
-<!-- ÉCRAN DE CONNEXION / CRÉATION D'ACCÈS -->
+<!-- ÉCRAN DE CONNEXION / CRÉATION D'ACCÈS SIMPLIFIÉ -->
 <div id="login-screen">
   <div class="login-card">
-    <div style="font-size:36px;margin-bottom:12px">🛠️</div>
-    <h2>Espace Administrateur</h2>
-    <p style="color:var(--text-muted);font-size:14px;margin-bottom:16px">AL-Phone Niamey — Gestion du catalogue</p>
+    <div style="font-size:36px;text-align:center">🛠️</div>
+    <h2 style="text-align:center">AL-Phone Admin</h2>
+    <p style="color:var(--text-muted);font-size:13px;text-align:center;margin-bottom:20px">
+      Gestion du catalogue de la boutique
+    </p>
 
-    <div style="display:flex;gap:6px;margin-bottom:18px;border-bottom:1px solid var(--border);padding-bottom:10px">
-      <button type="button" id="tab-login" class="btn-action" style="flex:1;background:var(--primary);color:#fff">Connexion</button>
-      <button type="button" id="tab-register" class="btn-action" style="flex:1">Créer / Activer</button>
+    <!-- Onglets simplifiés -->
+    <div style="display:flex;gap:6px;margin-bottom:20px;background:#1f2937;padding:4px;border-radius:8px">
+      <button type="button" id="tab-login" class="btn-action" style="flex:1;background:var(--primary);color:#fff;border:0;padding:8px">1. Connexion</button>
+      <button type="button" id="tab-register" class="btn-action" style="flex:1;background:transparent;color:var(--text-muted);border:0;padding:8px">2. Premier accès / Activer</button>
     </div>
 
     <!-- 1. Formulaire Connexion -->
     <div id="form-login-box">
-      <div class="form-group">
-        <label>Téléphone ou Email</label>
-        <input id="l_phone" type="text" placeholder="91 03 80 61 ou email" value="91038061">
+      <div class="form-group" style="margin-bottom:14px">
+        <label>Numéro de téléphone</label>
+        <input id="l_phone" type="tel" value="91038061" placeholder="Ex: 91038061" style="font-size:16px;font-weight:600">
       </div>
-      <div class="form-group">
+      <div class="form-group" style="margin-bottom:18px">
         <label>Mot de passe</label>
-        <input id="l_pass" type="password" placeholder="••••••••" autocomplete="current-password">
+        <input id="l_pass" type="password" placeholder="Votre mot de passe" autocomplete="current-password" style="font-size:16px">
       </div>
-      <button class="btn-primary" id="btn-login" style="width:100%;justify-content:center;margin-top:12px;padding:12px">
+      <button class="btn-primary" id="btn-login" style="width:100%;justify-content:center;padding:12px;font-size:15px">
         Se connecter →
       </button>
-      <p style="font-size:12px;color:var(--text-muted);margin-top:14px;text-align:center">
-        Premier accès ? Cliquez sur l'onglet <b>Créer / Activer</b> ci-dessus pour définir votre mot de passe.
-      </p>
+
+      <div style="margin-top:16px;padding:12px;background:rgba(255,255,255,0.03);border-radius:8px;font-size:12px;color:var(--text-muted);line-height:1.5">
+        ℹ️ <b>Vous n'avez pas encore de mot de passe ?</b><br>
+        Cliquez sur l'onglet <b>« 2. Premier accès / Activer »</b> pour définir votre mot de passe en 5 secondes.
+      </div>
     </div>
 
-    <!-- 2. Formulaire Inscription / Définition du mot de passe -->
+    <!-- 2. Formulaire Premier Accès / Définition du mot de passe -->
     <div id="form-register-box" style="display:none">
-      <div class="form-group">
-        <label>Votre Nom</label>
+      <div class="form-group" style="margin-bottom:12px">
+        <label>Nom complet</label>
         <input id="r_name" value="Directeur AL-Phone">
       </div>
-      <div class="form-group">
+      <div class="form-group" style="margin-bottom:12px">
         <label>Numéro de téléphone</label>
-        <input id="r_phone" type="tel" value="91038061">
-        <span style="font-size:11px;color:#34d399">✓ Numéro officiel de direction reconnu Super-Admin</span>
+        <input id="r_phone" type="tel" value="91038061" style="font-size:16px;font-weight:600">
+        <span style="font-size:11px;color:#34d399">✓ Numéro de direction (+227 91 03 80 61)</span>
       </div>
-      <div class="form-group">
+      <div class="form-group" style="margin-bottom:18px">
         <label>Choisissez votre mot de passe</label>
-        <input id="r_pass" type="password" placeholder="Au moins 6 caractères">
+        <input id="r_pass" type="password" placeholder="Min. 6 caractères" style="font-size:16px">
       </div>
-      <button class="btn-primary" id="btn-register" style="width:100%;justify-content:center;margin-top:12px;padding:12px">
-        Créer / Activer mon compte Admin
+      <button class="btn-primary" id="btn-register" style="width:100%;justify-content:center;padding:12px;font-size:15px">
+        Activer mon accès Admin →
       </button>
+
+      <div style="margin-top:16px;padding:12px;background:rgba(255,255,255,0.03);border-radius:8px;font-size:12px;color:var(--text-muted);line-height:1.5">
+        💡 Cela va créer votre profil avec les pleins droits administrateur sur le catalogue.
+      </div>
     </div>
   </div>
 </div>
@@ -418,16 +311,17 @@ input:focus, select:focus, textarea:focus { outline: 2px solid var(--primary); }
     <span>🛍️</span> AL-Phone Admin
   </div>
   <nav class="menu">
-    <button class="active" data-view="products">🛍️ Catalogue &amp; Stock</button>
+    <button class="active" data-view="products">📦 Catalogue &amp; Stock</button>
     <button data-view="users">👥 Utilisateurs</button>
-    <a href="index.html" target="_blank" rel="noopener">🌐 Ouvrir la boutique ↗</a>
+    <a href="index.html" target="_blank" rel="noopener">🌐 Voir le site boutique ↗</a>
   </nav>
   <div class="aside-foot">
     <div class="admin-badge">
-      Connecté en tant que :
-      <b id="admin-name">Admin</b>
+      Connecté :
+      <b id="admin-name">Directeur AL-Phone</b>
     </div>
-    <button class="btn-logout" id="btn-logout">Se déconnecter</button>
+    <button class="btn-foot" id="btn-open-pwd-modal">🔑 Changer mon mot de passe</button>
+    <button class="btn-foot danger" id="btn-logout">Déconnexion</button>
   </div>
 </aside>
 
@@ -459,7 +353,7 @@ input:focus, select:focus, textarea:focus { outline: 2px solid var(--primary); }
         <div class="num" id="kpi-out" style="color:var(--danger)">0</div>
       </div>
       <div class="kpi">
-        <div class="lbl">Total Vendus</div>
+        <div class="lbl">Total Ventes</div>
         <div class="num" id="kpi-sold" style="color:var(--success)">0</div>
       </div>
     </div>
@@ -468,7 +362,7 @@ input:focus, select:focus, textarea:focus { outline: 2px solid var(--primary); }
       <div class="search-box">
         <input id="search-prod" placeholder="🔍 Rechercher un produit par nom...">
       </div>
-      <select id="filter-cat">
+      <select id="filter-cat" class="select-filter">
         <option value="Tous">Toutes les catégories</option>
         <option value="Téléphones">📱 Téléphones</option>
         <option value="Pochettes">🧴 Pochettes</option>
@@ -484,7 +378,7 @@ input:focus, select:focus, textarea:focus { outline: 2px solid var(--primary); }
           <tr>
             <th>Article</th>
             <th>Catégorie</th>
-            <th>Prix</th>
+            <th>Prix (FCFA)</th>
             <th>Stock</th>
             <th>Vendus</th>
             <th>Statut</th>
@@ -492,7 +386,7 @@ input:focus, select:focus, textarea:focus { outline: 2px solid var(--primary); }
           </tr>
         </thead>
         <tbody id="table-products">
-          <tr><td colspan="7" style="text-align:center;padding:30px;color:var(--text-muted)">Chargement du catalogue...</td></tr>
+          <tr><td colspan="7" style="text-align:center;padding:24px;color:var(--text-muted)">Chargement...</td></tr>
         </tbody>
       </table>
     </div>
@@ -503,7 +397,7 @@ input:focus, select:focus, textarea:focus { outline: 2px solid var(--primary); }
     <header class="topbar">
       <div>
         <h1>Utilisateurs</h1>
-        <p style="color:var(--text-muted);font-size:14px">Comptes et administrateurs du système.</p>
+        <p style="color:var(--text-muted);font-size:14px">Gérez les privilèges et les accès.</p>
       </div>
     </header>
     <div class="card-table">
@@ -517,14 +411,16 @@ input:focus, select:focus, textarea:focus { outline: 2px solid var(--primary); }
             <th>Actions</th>
           </tr>
         </thead>
-        <tbody id="table-users"></tbody>
+        <tbody id="table-users">
+          <tr><td colspan="5" style="text-align:center;padding:24px;color:var(--text-muted)">Chargement...</td></tr>
+        </tbody>
       </table>
     </div>
   </section>
 </main>
 
-<!-- MODAL AJOUT / ÉDITION PRODUIT -->
-<div class="modal-overlay" id="modal-product" style="display:none">
+<!-- MODALE PRODUIT (Ajout / Édition) -->
+<div class="modal-overlay" id="modal-product">
   <div class="modal-box">
     <div class="modal-head">
       <h3 id="modal-title">Ajouter un article</h3>
@@ -532,76 +428,84 @@ input:focus, select:focus, textarea:focus { outline: 2px solid var(--primary); }
     </div>
     <form id="form-product">
       <input type="hidden" id="p_id">
-      
-      <div class="form-group">
-        <label>Nom du produit</label>
-        <input id="p_name" required placeholder="Ex : iPhone 14 Pro 128 Go">
-      </div>
-
       <div class="form-grid">
+        <div class="form-group full">
+          <label>Nom de l'article *</label>
+          <input id="p_name" required placeholder="Ex: iPhone 14 128 Go">
+        </div>
         <div class="form-group">
           <label>Catégorie</label>
           <select id="p_cat">
-            <option value="Téléphones">Téléphones</option>
-            <option value="Pochettes">Pochettes</option>
-            <option value="Antichocs">Antichocs</option>
-            <option value="Lampes">Lampes</option>
-            <option value="Numérique">Numérique</option>
+            <option value="Téléphones">📱 Téléphones</option>
+            <option value="Pochettes">🧴 Pochettes</option>
+            <option value="Antichocs">🛡️ Antichocs</option>
+            <option value="Lampes">💡 Lampes</option>
+            <option value="Numérique">🎧 Numérique</option>
           </select>
         </div>
         <div class="form-group">
-          <label>Emoji</label>
-          <input id="p_emoji" placeholder="📱" value="📱">
-        </div>
-      </div>
-
-      <div class="form-grid">
-        <div class="form-group">
-          <label>Prix de vente (FCFA)</label>
-          <input id="p_price" type="number" min="0" required placeholder="150000">
+          <label>Emoji de repli</label>
+          <input id="p_emoji" value="📱" placeholder="📱, 🎧, 📦">
         </div>
         <div class="form-group">
-          <label>Ancien prix / barré (FCFA)</label>
-          <input id="p_old" type="number" min="0" placeholder="165000 (facultatif)">
-        </div>
-      </div>
-
-      <div class="form-grid">
-        <div class="form-group">
-          <label>Quantité en Stock</label>
-          <input id="p_stock" type="number" min="0" value="10" required>
+          <label>Prix de vente (FCFA) *</label>
+          <input id="p_price" type="number" required min="0" step="500" placeholder="Ex: 150000">
         </div>
         <div class="form-group">
-          <label>Position / Ordre (0 = premier)</label>
+          <label>Ancien prix barré (FCFA)</label>
+          <input id="p_old" type="number" min="0" step="500" placeholder="Optionnel">
+        </div>
+        <div class="form-group">
+          <label>Quantité en stock</label>
+          <input id="p_stock" type="number" min="0" value="10">
+        </div>
+        <div class="form-group">
+          <label>Ordre d'affichage</label>
           <input id="p_order" type="number" value="0">
         </div>
+        <div class="form-group full">
+          <label>Statut</label>
+          <select id="p_active">
+            <option value="true">🟢 En ligne (visible sur le catalogue)</option>
+            <option value="false">🔴 Masqué (brouillon)</option>
+          </select>
+        </div>
+        <div class="form-group full">
+          <label>Photo de l'article</label>
+          <input id="p_img_url" type="url" placeholder="https://... (ou téléchargez ci-dessous)">
+          <div style="display:flex;align-items:center;gap:10px;margin-top:6px">
+            <input type="file" id="p_file" accept="image/*" style="font-size:12px">
+            <span id="img-preview"></span>
+          </div>
+        </div>
+        <div class="form-group full">
+          <label>Description détaillée</label>
+          <textarea id="p_desc" placeholder="Caractéristiques techniques, état, garantie..."></textarea>
+        </div>
       </div>
-
-      <div class="form-group">
-        <label>Statut de visibilité</label>
-        <select id="p_active">
-          <option value="true">🟢 En ligne (visible sur la boutique)</option>
-          <option value="false">🔴 Masqué (brouillon)</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label>Photo de l'article</label>
-        <input id="p_file" type="file" accept="image/*">
-        <input type="hidden" id="p_img_url">
-        <div id="img-preview" style="margin-top:8px"></div>
-      </div>
-
-      <div class="form-group">
-        <label>Description détaillée</label>
-        <textarea id="p_desc" rows="3" placeholder="Caractéristiques, état, garantie..."></textarea>
-      </div>
-
-      <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:16px">
+      <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:20px;border-top:1px solid var(--border);padding-top:16px">
         <button type="button" class="btn-action" id="modal-cancel">Annuler</button>
         <button type="submit" class="btn-primary" id="btn-save-product">Enregistrer l'article</button>
       </div>
     </form>
+  </div>
+</div>
+
+<!-- MODALE CHANGER MOT DE PASSE -->
+<div class="modal-overlay" id="modal-pwd">
+  <div class="modal-box" style="max-width:400px">
+    <div class="modal-head">
+      <h3>🔑 Changer mon mot de passe</h3>
+      <button class="modal-close" id="modal-pwd-close">&times;</button>
+    </div>
+    <div class="form-group" style="margin-bottom:16px">
+      <label>Nouveau mot de passe</label>
+      <input id="new_admin_pwd" type="password" placeholder="Au moins 6 caractères" style="font-size:15px">
+    </div>
+    <div style="display:flex;justify-content:flex-end;gap:10px">
+      <button type="button" class="btn-action" id="modal-pwd-cancel">Annuler</button>
+      <button type="button" class="btn-primary" id="btn-save-pwd">Mettre à jour</button>
+    </div>
   </div>
 </div>
 
@@ -618,7 +522,7 @@ const toast = msg => {
   t.className = "toast";
   t.textContent = msg;
   document.body.appendChild(t);
-  setTimeout(() => t.remove(), 3200);
+  setTimeout(() => t.remove(), 3400);
 };
 
 let CURRENT_ADMIN = null;
@@ -631,7 +535,7 @@ async function init() {
     if (me && me.is_admin) {
       CURRENT_ADMIN = me;
       $("#login-screen").style.display = "none";
-      $("#admin-name").textContent = me.name || "Admin";
+      $("#admin-name").textContent = me.name || "Directeur AL-Phone";
       await refreshData();
       return;
     }
@@ -647,7 +551,7 @@ async function refreshData() {
     ALL_USERS = await API.users();
     renderUsers();
   } catch (err) {
-    toast("Erreur de chargement : " + err.message);
+    toast("Erreur : " + err.message);
   }
 }
 
@@ -696,7 +600,7 @@ function renderProducts() {
           </div>
         </div>
       </td>
-      <td><span class="badge" style="background:#334155;color:#f8fafc">${esc(p.cat)}</span></td>
+      <td><span class="badge" style="background:#374151;color:#f9fafb">${esc(p.cat)}</span></td>
       <td>${priceText}</td>
       <td>${stockBadge}</td>
       <td>${p.sold || 0}</td>
@@ -715,7 +619,7 @@ function renderProducts() {
     const currentActive = b.dataset.active === "true";
     try {
       await API.toggleActive(id, !currentActive);
-      toast(currentActive ? "Article masqué de la boutique" : "Article publié en ligne ✓");
+      toast(currentActive ? "Article masqué" : "Article publié ✓");
       await refreshData();
     } catch (e) { toast("Erreur : " + e.message); }
   });
@@ -738,7 +642,7 @@ function renderUsers() {
     return;
   }
   tbody.innerHTML = ALL_USERS.map(u => `<tr>
-    <td><b>${esc(u.name)}</b><div style="font-size:12px;color:var(--text-muted)">Inscrit le ${u.created_at?.slice(0, 10)}</div></td>
+    <td><b>${esc(u.name)}</b><div style="font-size:12px;color:var(--text-muted)">Inscrit le ${u.created_at ? u.created_at.slice(0, 10) : "—"}</div></td>
     <td>${esc(u.phone || "—")}</td>
     <td>${u.is_admin ? '<span class="badge badge-active">Administrateur</span>' : 'Client'}</td>
     <td>${u.blocked ? '<span class="badge badge-hidden">Bloqué</span>' : '<span class="badge badge-active">Actif</span>'}</td>
@@ -785,7 +689,7 @@ function openAddModal() {
   $("#p_img_url").value = "";
   $("#p_file").value = "";
   $("#img-preview").innerHTML = "";
-  $("#modal-product").style.display = "flex";
+  $("#modal-product").style.display = "grid";
 }
 
 function openEditModal(id) {
@@ -807,19 +711,19 @@ function openEditModal(id) {
   $("#img-preview").innerHTML = p.img_url
     ? `<img src="${esc(p.img_url)}" style="max-height:80px;border-radius:6px;border:1px solid var(--border)">`
     : "";
-  $("#modal-product").style.display = "flex";
+  $("#modal-product").style.display = "grid";
 }
 
 function closeModal() { $("#modal-product").style.display = "none"; }
 
-/* Événements login / tabs */
+/* Onglets Connexion / Premier accès */
 $("#tab-login").onclick = () => {
   $("#form-login-box").style.display = "block";
   $("#form-register-box").style.display = "none";
   $("#tab-login").style.background = "var(--primary)";
   $("#tab-login").style.color = "#fff";
   $("#tab-register").style.background = "transparent";
-  $("#tab-register").style.color = "var(--text)";
+  $("#tab-register").style.color = "var(--text-muted)";
 };
 
 $("#tab-register").onclick = () => {
@@ -828,14 +732,15 @@ $("#tab-register").onclick = () => {
   $("#tab-register").style.background = "var(--primary)";
   $("#tab-register").style.color = "#fff";
   $("#tab-login").style.background = "transparent";
-  $("#tab-login").style.color = "var(--text)";
+  $("#tab-login").style.color = "var(--text-muted)";
 };
 
+/* Actions Auth */
 $("#btn-login").onclick = async () => {
   const phone = $("#l_phone").value.trim();
   const pass = $("#l_pass").value;
-  if (!phone || !pass) return toast("Remplissez le téléphone/email et le mot de passe");
-  
+  if (!phone || !pass) return toast("Remplissez le téléphone et le mot de passe");
+
   const btn = $("#btn-login");
   btn.disabled = true;
   btn.textContent = "Connexion...";
@@ -844,11 +749,11 @@ $("#btn-login").onclick = async () => {
     const me = await API.me();
     if (!me || !me.is_admin) {
       await API.logout();
-      throw new Error("Ce compte n'est pas encore administrateur.");
+      throw new Error("Ce compte n'a pas encore le rôle Administrateur.");
     }
     CURRENT_ADMIN = me;
     $("#login-screen").style.display = "none";
-    $("#admin-name").textContent = me.name || "Admin";
+    $("#admin-name").textContent = me.name || "Directeur AL-Phone";
     toast("Bienvenue " + me.name + " !");
     await refreshData();
   } catch (err) {
@@ -863,36 +768,57 @@ $("#btn-register").onclick = async () => {
   const name = $("#r_name").value.trim();
   const phone = $("#r_phone").value.trim();
   const pass = $("#r_pass").value;
-  if (!name || name.length < 2) return toast("Veuillez renseigner votre nom");
-  if (!phone) return toast("Numéro de téléphone requis");
+  if (!name) return toast("Nom requis");
+  if (!phone) return toast("Numéro requis");
   if (!pass || pass.length < 6) return toast("Mot de passe : min. 6 caractères");
 
   const btn = $("#btn-register");
   btn.disabled = true;
-  btn.textContent = "Création du compte...";
+  btn.textContent = "Activation en cours...";
   try {
     await API.register(name, phone, pass);
     await API.login(phone, pass);
     const me = await API.me();
     CURRENT_ADMIN = me;
     $("#login-screen").style.display = "none";
-    $("#admin-name").textContent = me.name || "Admin";
-    toast("Compte Administrateur activé avec succès ✓");
+    $("#admin-name").textContent = me.name || "Directeur AL-Phone";
+    toast("Accès Administrateur créé avec succès ✓");
     await refreshData();
   } catch (err) {
-    toast(err.message || "Erreur lors de la création");
+    toast(err.message || "Erreur lors de l'activation");
   } finally {
     btn.disabled = false;
-    btn.textContent = "Créer / Activer mon compte Admin";
+    btn.textContent = "Activer mon accès Admin →";
   }
 };
 
+/* Déconnexion */
 $("#btn-logout").onclick = async () => {
   await API.logout();
   CURRENT_ADMIN = null;
   $("#login-screen").style.display = "flex";
 };
 
+/* Modal Mot de passe */
+$("#btn-open-pwd-modal").onclick = () => {
+  $("#new_admin_pwd").value = "";
+  $("#modal-pwd").style.display = "grid";
+};
+$("#modal-pwd-close").onclick = () => { $("#modal-pwd").style.display = "none"; };
+$("#modal-pwd-cancel").onclick = () => { $("#modal-pwd").style.display = "none"; };
+$("#btn-save-pwd").onclick = async () => {
+  const np = $("#new_admin_pwd").value;
+  if (!np || np.length < 6) return toast("Nouveau mot de passe : min. 6 caractères");
+  try {
+    await API.changePassword(np);
+    toast("Mot de passe mis à jour avec succès ✓");
+    $("#modal-pwd").style.display = "none";
+  } catch (e) {
+    toast("Erreur : " + e.message);
+  }
+};
+
+/* Formulaires & Filtres */
 $("#search-prod").oninput = renderProducts;
 $("#filter-cat").onchange = renderProducts;
 $("#btn-add-product").onclick = openAddModal;
@@ -911,7 +837,7 @@ $("#p_file").onchange = async ev => {
     const url = await API.uploadImage(file);
     $("#p_img_url").value = url;
     $("#img-preview").innerHTML = `<img src="${esc(url)}" style="max-height:80px;border-radius:6px;border:1px solid var(--border)">`;
-    toast("Photo téléchargée avec succès ✓");
+    toast("Photo téléchargée ✓");
   } catch (err) {
     toast("Erreur d'envoi : " + err.message);
   } finally {
@@ -932,7 +858,7 @@ $("#form-product").onsubmit = async ev => {
       id,
       name: $("#p_name").value.trim(),
       cat: $("#p_cat").value,
-      emoji: $("#p_emoji").value.trim() || "📦",
+      emoji: $("#p_emoji").value.trim() || "📱",
       price: +$("#p_price").value || 0,
       old_price: +$("#p_old").value || 0,
       stock: +$("#p_stock").value || 0,
