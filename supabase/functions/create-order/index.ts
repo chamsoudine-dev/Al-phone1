@@ -86,9 +86,9 @@ Deno.serve(async (req) => {
       customer_email: user.email ?? "client@exemple.com",
       customer_address: addr.area,
       customer_city: addr.city,
-      customer_country: "CI",
-      customer_state: "CI",
-      customer_zip_code: "00225",
+      customer_country: Deno.env.get("CINETPAY_COUNTRY") ?? (addr.phone.startsWith("+227") ? "NE" : "CI"),
+      customer_state: Deno.env.get("CINETPAY_COUNTRY") ?? (addr.phone.startsWith("+227") ? "NE" : "CI"),
+      customer_zip_code: Deno.env.get("CINETPAY_ZIP") ?? (addr.phone.startsWith("+227") ? "00227" : "00225"),
     }),
   });
   const res = await r.json().catch(() => ({}));
