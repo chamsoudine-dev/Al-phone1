@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Panneau d'administration — AL-Phone Niamey</title>
+<style>
+:root {
+  --bg: #0f172a;
+  --sidebar: #1e293b;
+  --card: #1e293b;
+  --card-hover: #273549;
+  --border: #334155;
+  --text: #f8fafc;
+  --text-muted: #94a3b8;
+  --primary: #f97316;
+  --primary-hover: #ea580c;
+  --success: #10b981;
+  --danger: #ef4444;
+  --radius: 12px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+}
+aside.sidebar {
+  width: 250px;
+  background: var(--sidebar);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  padding: 20px 16px;
+}
+.brand {
+  font-size: 19px;
+  font-weight: 800;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+}
+.brand span { color: var(--primary); }
+nav.menu {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+}
+.menu button, .menu a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 14px;
+  border-radius: var(--radius);
+  background: transparent;
+  border: 0;
+  color: var(--text-muted);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all .2s;
+  text-align: left;
+}
+.menu button:hover, .menu a:hover {
+  background: rgba(255,255,255,0.06);
+  color: var(--text);
+}
+.menu button.active {
+  background: var(--primary);
+  color: #fff;
+}
+.aside-foot {
+  border-top: 1px solid var(--border);
+  padding-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.admin-badge {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+.admin-badge b { color: var(--text); display: block; }
+.btn-logout {
+  background: rgba(239, 68, 68, 0.15);
+  color: #fca5a5;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  padding: 8px 12px;
+  border-radius: 8px;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.btn-logout:hover { background: var(--danger); color: #fff; }
+
+main.content {
+  flex: 1;
+  padding: 28px 36px;
+  max-width: 1300px;
+  overflow-y: auto;
+}
+header.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+h1 { font-size: 24px; font-weight: 800; }
+.kpis {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 28px;
+}
+.kpi {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+}
+.kpi .num {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--primary);
+  margin-top: 4px;
+}
+.kpi .lbl {
+  font-size: 13px;
+  color: var(--text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.actions-bar {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+.search-box {
+  flex: 1;
+  min-width: 220px;
+}
+.search-box input, .actions-bar select {
+  width: 100%;
+  background: var(--card);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 10px 14px;
+  border-radius: 9px;
+  font: inherit;
+  font-size: 14px;
+}
+.btn-primary {
+  background: var(--primary);
+  color: #fff;
+  border: 0;
+  padding: 10px 18px;
+  border-radius: 9px;
+  font: inherit;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background .2s;
+}
+.btn-primary:hover { background: var(--primary-hover); }
+
+.card-table {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow-x: auto;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+th {
+  background: rgba(0,0,0,0.2);
+  padding: 12px 16px;
+  text-align: left;
+  color: var(--text-muted);
+  font-size: 12px;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--border);
+}
+td {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+tr:hover td { background: var(--card-hover); }
+.product-cell {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.product-img {
+  width: 46px;
+  height: 46px;
+  border-radius: 8px;
+  background: #334155;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.product-img img { width: 100%; height: 100%; object-fit: cover; }
+.badge {
+  display: inline-block;
+  padding: 4px 9px;
+  border-radius: 99px;
+  font-size: 11px;
+  font-weight: 700;
+}
+.badge-active { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+.badge-hidden { background: rgba(239, 68, 68, 0.2); color: #f87171; }
+.badge-low { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
+.btn-action {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 6px 12px;
+  border-radius: 7px;
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+  margin-right: 4px;
+}
+.btn-action:hover { background: rgba(255,255,255,0.1); }
+.btn-action.danger { color: #f87171; border-color: rgba(239, 68, 68, 0.3); }
+.btn-action.danger:hover { background: var(--danger); color: #fff; }
+
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 16px;
+}
+.modal-box {
+  background: var(--sidebar);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  max-width: 620px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 24px;
+}
+.modal-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+.modal-head h3 { font-size: 18px; font-weight: 700; }
+.modal-close {
+  background: none;
+  border: 0;
+  color: var(--text-muted);
+  font-size: 24px;
+  cursor: pointer;
+}
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+.form-group.full { grid-column: span 2; }
+label { font-size: 12px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; }
+input, select, textarea {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 10px 12px;
+  border-radius: 8px;
+  font: inherit;
+  font-size: 14px;
+}
+input:focus, select:focus, textarea:focus { outline: 2px solid var(--primary); }
+
+/* Écran Login */
+#login-screen {
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  padding: 20px;
+}
+.login-card {
+  background: var(--sidebar);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  width: 100%;
+  max-width: 440px;
+  padding: 32px 28px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+.login-card h2 { margin-bottom: 6px; font-size: 22px; }
+.toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--primary);
+  color: #fff;
+  padding: 11px 22px;
+  border-radius: 99px;
+  font-size: 14px;
+  font-weight: 600;
+  z-index: 300;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.4);
+}
+@media (max-width: 768px) {
+  body { flex-direction: column; }
+  aside.sidebar { width: 100%; height: auto; position: static; border-right: 0; border-bottom: 1px solid var(--border); }
+  main.content { padding: 18px 16px; }
+  .form-grid { grid-template-columns: 1fr; }
+  .form-group.full { grid-column: span 1; }
+}
+</style>
+</head>
+<body>
+
+<!-- ÉCRAN DE CONNEXION / CRÉATION D'ACCÈS -->
+<div id="login-screen">
+  <div class="login-card">
+    <div style="font-size:36px;margin-bottom:12px">🛠️</div>
+    <h2>Espace Administrateur</h2>
+    <p style="color:var(--text-muted);font-size:14px;margin-bottom:16px">AL-Phone Niamey — Gestion du catalogue</p>
+
+    <div style="display:flex;gap:6px;margin-bottom:18px;border-bottom:1px solid var(--border);padding-bottom:10px">
+      <button type="button" id="tab-login" class="btn-action" style="flex:1;background:var(--primary);color:#fff">Connexion</button>
+      <button type="button" id="tab-register" class="btn-action" style="flex:1">Créer / Activer</button>
+    </div>
+
+    <!-- 1. Formulaire Connexion -->
+    <div id="form-login-box">
+      <div class="form-group">
+        <label>Téléphone ou Email</label>
+        <input id="l_phone" type="text" placeholder="91 03 80 61 ou email" value="91038061">
+      </div>
+      <div class="form-group">
+        <label>Mot de passe</label>
+        <input id="l_pass" type="password" placeholder="••••••••" autocomplete="current-password">
+      </div>
+      <button class="btn-primary" id="btn-login" style="width:100%;justify-content:center;margin-top:12px;padding:12px">
+        Se connecter →
+      </button>
+      <p style="font-size:12px;color:var(--text-muted);margin-top:14px;text-align:center">
+        Premier accès ? Cliquez sur l'onglet <b>Créer / Activer</b> ci-dessus pour définir votre mot de passe.
+      </p>
+    </div>
+
+    <!-- 2. Formulaire Inscription / Définition du mot de passe -->
+    <div id="form-register-box" style="display:none">
+      <div class="form-group">
+        <label>Votre Nom</label>
+        <input id="r_name" value="Directeur AL-Phone">
+      </div>
+      <div class="form-group">
+        <label>Numéro de téléphone</label>
+        <input id="r_phone" type="tel" value="91038061">
+        <span style="font-size:11px;color:#34d399">✓ Numéro officiel de direction reconnu Super-Admin</span>
+      </div>
+      <div class="form-group">
+        <label>Choisissez votre mot de passe</label>
+        <input id="r_pass" type="password" placeholder="Au moins 6 caractères">
+      </div>
+      <button class="btn-primary" id="btn-register" style="width:100%;justify-content:center;margin-top:12px;padding:12px">
+        Créer / Activer mon compte Admin
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="brand">
+    <span>🛍️</span> AL-Phone Admin
+  </div>
+  <nav class="menu">
+    <button class="active" data-view="products">🛍️ Catalogue &amp; Stock</button>
+    <button data-view="users">👥 Utilisateurs</button>
+    <a href="index.html" target="_blank" rel="noopener">🌐 Ouvrir la boutique ↗</a>
+  </nav>
+  <div class="aside-foot">
+    <div class="admin-badge">
+      Connecté en tant que :
+      <b id="admin-name">Admin</b>
+    </div>
+    <button class="btn-logout" id="btn-logout">Se déconnecter</button>
+  </div>
+</aside>
+
+<!-- CONTENU PRINCIPAL -->
+<main class="content">
+  <!-- VUE PRODUITS -->
+  <section id="view-products">
+    <header class="topbar">
+      <div>
+        <h1>Gestion du Catalogue</h1>
+        <p style="color:var(--text-muted);font-size:14px">Consultez, modifiez vos prix, ajoutez des articles et gérez les stocks.</p>
+      </div>
+      <button class="btn-primary" id="btn-add-product">
+        <span>➕</span> Nouvel article
+      </button>
+    </header>
+
+    <div class="kpis">
+      <div class="kpi">
+        <div class="lbl">Total Articles</div>
+        <div class="num" id="kpi-total">0</div>
+      </div>
+      <div class="kpi">
+        <div class="lbl">Articles en ligne</div>
+        <div class="num" id="kpi-online">0</div>
+      </div>
+      <div class="kpi">
+        <div class="lbl">Ruptures de stock</div>
+        <div class="num" id="kpi-out" style="color:var(--danger)">0</div>
+      </div>
+      <div class="kpi">
+        <div class="lbl">Total Vendus</div>
+        <div class="num" id="kpi-sold" style="color:var(--success)">0</div>
+      </div>
+    </div>
+
+    <div class="actions-bar">
+      <div class="search-box">
+        <input id="search-prod" placeholder="🔍 Rechercher un produit par nom...">
+      </div>
+      <select id="filter-cat">
+        <option value="Tous">Toutes les catégories</option>
+        <option value="Téléphones">📱 Téléphones</option>
+        <option value="Pochettes">🧴 Pochettes</option>
+        <option value="Antichocs">🛡️ Antichocs</option>
+        <option value="Lampes">💡 Lampes</option>
+        <option value="Numérique">🎧 Numérique</option>
+      </select>
+    </div>
+
+    <div class="card-table">
+      <table>
+        <thead>
+          <tr>
+            <th>Article</th>
+            <th>Catégorie</th>
+            <th>Prix</th>
+            <th>Stock</th>
+            <th>Vendus</th>
+            <th>Statut</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="table-products">
+          <tr><td colspan="7" style="text-align:center;padding:30px;color:var(--text-muted)">Chargement du catalogue...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- VUE UTILISATEURS -->
+  <section id="view-users" style="display:none">
+    <header class="topbar">
+      <div>
+        <h1>Utilisateurs</h1>
+        <p style="color:var(--text-muted);font-size:14px">Comptes et administrateurs du système.</p>
+      </div>
+    </header>
+    <div class="card-table">
+      <table>
+        <thead>
+          <tr>
+            <th>Nom</th>
+            <th>Téléphone</th>
+            <th>Rôle</th>
+            <th>Statut</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="table-users"></tbody>
+      </table>
+    </div>
+  </section>
+</main>
+
+<!-- MODAL AJOUT / ÉDITION PRODUIT -->
+<div class="modal-overlay" id="modal-product" style="display:none">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h3 id="modal-title">Ajouter un article</h3>
+      <button class="modal-close" id="modal-close">&times;</button>
+    </div>
+    <form id="form-product">
+      <input type="hidden" id="p_id">
+      
+      <div class="form-group">
+        <label>Nom du produit</label>
+        <input id="p_name" required placeholder="Ex : iPhone 14 Pro 128 Go">
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Catégorie</label>
+          <select id="p_cat">
+            <option value="Téléphones">Téléphones</option>
+            <option value="Pochettes">Pochettes</option>
+            <option value="Antichocs">Antichocs</option>
+            <option value="Lampes">Lampes</option>
+            <option value="Numérique">Numérique</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Emoji</label>
+          <input id="p_emoji" placeholder="📱" value="📱">
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Prix de vente (FCFA)</label>
+          <input id="p_price" type="number" min="0" required placeholder="150000">
+        </div>
+        <div class="form-group">
+          <label>Ancien prix / barré (FCFA)</label>
+          <input id="p_old" type="number" min="0" placeholder="165000 (facultatif)">
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Quantité en Stock</label>
+          <input id="p_stock" type="number" min="0" value="10" required>
+        </div>
+        <div class="form-group">
+          <label>Position / Ordre (0 = premier)</label>
+          <input id="p_order" type="number" value="0">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Statut de visibilité</label>
+        <select id="p_active">
+          <option value="true">🟢 En ligne (visible sur la boutique)</option>
+          <option value="false">🔴 Masqué (brouillon)</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Photo de l'article</label>
+        <input id="p_file" type="file" accept="image/*">
+        <input type="hidden" id="p_img_url">
+        <div id="img-preview" style="margin-top:8px"></div>
+      </div>
+
+      <div class="form-group">
+        <label>Description détaillée</label>
+        <textarea id="p_desc" rows="3" placeholder="Caractéristiques, état, garantie..."></textarea>
+      </div>
+
+      <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:16px">
+        <button type="button" class="btn-action" id="modal-cancel">Annuler</button>
+        <button type="submit" class="btn-primary" id="btn-save-product">Enregistrer l'article</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="api.js"></script>
+<script>
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c =>
+  ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+const toast = msg => {
+  const t = document.createElement("div");
+  t.className = "toast";
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 3200);
+};
+
+let CURRENT_ADMIN = null;
+let ALL_PRODUCTS = [];
+let ALL_USERS = [];
+
+async function init() {
+  try {
+    const me = await API.me();
+    if (me && me.is_admin) {
+      CURRENT_ADMIN = me;
+      $("#login-screen").style.display = "none";
+      $("#admin-name").textContent = me.name || "Admin";
+      await refreshData();
+      return;
+    }
+  } catch (e) {}
+  $("#login-screen").style.display = "flex";
+}
+
+async function refreshData() {
+  try {
+    ALL_PRODUCTS = await API.allProducts();
+    updateKPIs();
+    renderProducts();
+    ALL_USERS = await API.users();
+    renderUsers();
+  } catch (err) {
+    toast("Erreur de chargement : " + err.message);
+  }
+}
+
+function updateKPIs() {
+  $("#kpi-total").textContent = ALL_PRODUCTS.length;
+  $("#kpi-online").textContent = ALL_PRODUCTS.filter(p => p.active).length;
+  $("#kpi-out").textContent = ALL_PRODUCTS.filter(p => p.stock <= 0).length;
+  $("#kpi-sold").textContent = ALL_PRODUCTS.reduce((acc, p) => acc + (p.sold || 0), 0);
+}
+
+function renderProducts() {
+  const search = ($("#search-prod").value || "").toLowerCase().trim();
+  const cat = $("#filter-cat").value;
+
+  const filtered = ALL_PRODUCTS.filter(p => {
+    const matchCat = cat === "Tous" || p.cat === cat;
+    const matchSearch = !search || (p.name + " " + (p.descr || "")).toLowerCase().includes(search);
+    return matchCat && matchSearch;
+  });
+
+  const tbody = $("#table-products");
+  if (!filtered.length) {
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:30px;color:var(--text-muted)">Aucun article trouvé.</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = filtered.map(p => {
+    const imgHtml = p.img_url ? `<img src="${esc(p.img_url)}" alt="">` : (p.emoji || "📦");
+    const statusBadge = p.active
+      ? '<span class="badge badge-active">🟢 En ligne</span>'
+      : '<span class="badge badge-hidden">🔴 Masqué</span>';
+    const stockBadge = p.stock <= 0
+      ? '<span class="badge badge-hidden">Rupture (0)</span>'
+      : (p.stock < 5 ? `<span class="badge badge-low">Faible (${p.stock})</span>` : p.stock);
+    const priceText = p.old_price && p.old_price > p.price
+      ? `<b>${p.price.toLocaleString("fr-FR")} FCFA</b> <span style="text-decoration:line-through;color:var(--text-muted);font-size:12px">${p.old_price.toLocaleString("fr-FR")}</span>`
+      : `<b>${p.price.toLocaleString("fr-FR")} FCFA</b>`;
+
+    return `<tr>
+      <td>
+        <div class="product-cell">
+          <div class="product-img">${imgHtml}</div>
+          <div>
+            <b>${esc(p.name)}</b>
+            <div style="font-size:12px;color:var(--text-muted)">Position : ${p.display_order || 0}</div>
+          </div>
+        </div>
+      </td>
+      <td><span class="badge" style="background:#334155;color:#f8fafc">${esc(p.cat)}</span></td>
+      <td>${priceText}</td>
+      <td>${stockBadge}</td>
+      <td>${p.sold || 0}</td>
+      <td>${statusBadge}</td>
+      <td>
+        <button class="btn-action" data-edit="${p.id}">✏️ Modifier</button>
+        <button class="btn-action" data-toggle="${p.id}" data-active="${p.active}">${p.active ? "Masquer" : "Publier"}</button>
+        <button class="btn-action danger" data-delete="${p.id}">🗑️</button>
+      </td>
+    </tr>`;
+  }).join("");
+
+  $$("[data-edit]").forEach(b => b.onclick = () => openEditModal(+b.dataset.edit));
+  $$("[data-toggle]").forEach(b => b.onclick = async () => {
+    const id = +b.dataset.toggle;
+    const currentActive = b.dataset.active === "true";
+    try {
+      await API.toggleActive(id, !currentActive);
+      toast(currentActive ? "Article masqué de la boutique" : "Article publié en ligne ✓");
+      await refreshData();
+    } catch (e) { toast("Erreur : " + e.message); }
+  });
+  $$("[data-delete]").forEach(b => b.onclick = async () => {
+    const id = +b.dataset.delete;
+    if (window.confirm("Supprimer définitivement cet article ?")) {
+      try {
+        await API.deleteProduct(id);
+        toast("Article supprimé ✓");
+        await refreshData();
+      } catch (e) { toast("Erreur : " + e.message); }
+    }
+  });
+}
+
+function renderUsers() {
+  const tbody = $("#table-users");
+  if (!ALL_USERS.length) {
+    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:20px;color:var(--text-muted)">Aucun utilisateur.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = ALL_USERS.map(u => `<tr>
+    <td><b>${esc(u.name)}</b><div style="font-size:12px;color:var(--text-muted)">Inscrit le ${u.created_at?.slice(0, 10)}</div></td>
+    <td>${esc(u.phone || "—")}</td>
+    <td>${u.is_admin ? '<span class="badge badge-active">Administrateur</span>' : 'Client'}</td>
+    <td>${u.blocked ? '<span class="badge badge-hidden">Bloqué</span>' : '<span class="badge badge-active">Actif</span>'}</td>
+    <td>
+      <button class="btn-action" data-toggle-admin="${u.id}" data-val="${u.is_admin ? 0 : 1}">
+        ${u.is_admin ? "Retirer admin" : "Promouvoir admin"}
+      </button>
+      <button class="btn-action ${u.blocked ? "" : "danger"}" data-toggle-block="${u.id}" data-val="${u.blocked ? 0 : 1}">
+        ${u.blocked ? "Débloquer" : "Bloquer"}
+      </button>
+    </td>
+  </tr>`).join("");
+
+  $$("[data-toggle-admin]").forEach(b => b.onclick = async () => {
+    const id = b.dataset.toggleAdmin, val = +b.dataset.val;
+    if (window.confirm(val ? "Nommer administrateur ?" : "Retirer les privilèges ?")) {
+      await API.setUser(id, { is_admin: !!val });
+      toast("Privilèges mis à jour ✓");
+      await refreshData();
+    }
+  });
+  $$("[data-toggle-block]").forEach(b => b.onclick = async () => {
+    const id = b.dataset.toggleBlock, val = +b.dataset.val;
+    if (window.confirm(val ? "Bloquer cet utilisateur ?" : "Débloquer cet utilisateur ?")) {
+      await API.setUser(id, { blocked: !!val });
+      toast("Statut mis à jour ✓");
+      await refreshData();
+    }
+  });
+}
+
+function openAddModal() {
+  $("#modal-title").textContent = "➕ Ajouter un article";
+  $("#p_id").value = "";
+  $("#p_name").value = "";
+  $("#p_cat").value = "Téléphones";
+  $("#p_emoji").value = "📱";
+  $("#p_price").value = "";
+  $("#p_old").value = "";
+  $("#p_stock").value = "10";
+  $("#p_order").value = "0";
+  $("#p_active").value = "true";
+  $("#p_desc").value = "";
+  $("#p_img_url").value = "";
+  $("#p_file").value = "";
+  $("#img-preview").innerHTML = "";
+  $("#modal-product").style.display = "flex";
+}
+
+function openEditModal(id) {
+  const p = ALL_PRODUCTS.find(x => x.id === id);
+  if (!p) return;
+  $("#modal-title").textContent = `✏️ Modifier l'article #${p.id}`;
+  $("#p_id").value = p.id;
+  $("#p_name").value = p.name || "";
+  $("#p_cat").value = p.cat || "Téléphones";
+  $("#p_emoji").value = p.emoji || "📦";
+  $("#p_price").value = p.price ?? "";
+  $("#p_old").value = p.old_price || "";
+  $("#p_stock").value = p.stock ?? 0;
+  $("#p_order").value = p.display_order || 0;
+  $("#p_active").value = p.active ? "true" : "false";
+  $("#p_desc").value = p.descr || "";
+  $("#p_img_url").value = p.img_url || "";
+  $("#p_file").value = "";
+  $("#img-preview").innerHTML = p.img_url
+    ? `<img src="${esc(p.img_url)}" style="max-height:80px;border-radius:6px;border:1px solid var(--border)">`
+    : "";
+  $("#modal-product").style.display = "flex";
+}
+
+function closeModal() { $("#modal-product").style.display = "none"; }
+
+/* Événements login / tabs */
+$("#tab-login").onclick = () => {
+  $("#form-login-box").style.display = "block";
+  $("#form-register-box").style.display = "none";
+  $("#tab-login").style.background = "var(--primary)";
+  $("#tab-login").style.color = "#fff";
+  $("#tab-register").style.background = "transparent";
+  $("#tab-register").style.color = "var(--text)";
+};
+
+$("#tab-register").onclick = () => {
+  $("#form-login-box").style.display = "none";
+  $("#form-register-box").style.display = "block";
+  $("#tab-register").style.background = "var(--primary)";
+  $("#tab-register").style.color = "#fff";
+  $("#tab-login").style.background = "transparent";
+  $("#tab-login").style.color = "var(--text)";
+};
+
+$("#btn-login").onclick = async () => {
+  const phone = $("#l_phone").value.trim();
+  const pass = $("#l_pass").value;
+  if (!phone || !pass) return toast("Remplissez le téléphone/email et le mot de passe");
+  
+  const btn = $("#btn-login");
+  btn.disabled = true;
+  btn.textContent = "Connexion...";
+  try {
+    await API.login(phone, pass);
+    const me = await API.me();
+    if (!me || !me.is_admin) {
+      await API.logout();
+      throw new Error("Ce compte n'est pas encore administrateur.");
+    }
+    CURRENT_ADMIN = me;
+    $("#login-screen").style.display = "none";
+    $("#admin-name").textContent = me.name || "Admin";
+    toast("Bienvenue " + me.name + " !");
+    await refreshData();
+  } catch (err) {
+    toast(err.message || "Échec de connexion");
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "Se connecter →";
+  }
+};
+
+$("#btn-register").onclick = async () => {
+  const name = $("#r_name").value.trim();
+  const phone = $("#r_phone").value.trim();
+  const pass = $("#r_pass").value;
+  if (!name || name.length < 2) return toast("Veuillez renseigner votre nom");
+  if (!phone) return toast("Numéro de téléphone requis");
+  if (!pass || pass.length < 6) return toast("Mot de passe : min. 6 caractères");
+
+  const btn = $("#btn-register");
+  btn.disabled = true;
+  btn.textContent = "Création du compte...";
+  try {
+    await API.register(name, phone, pass);
+    await API.login(phone, pass);
+    const me = await API.me();
+    CURRENT_ADMIN = me;
+    $("#login-screen").style.display = "none";
+    $("#admin-name").textContent = me.name || "Admin";
+    toast("Compte Administrateur activé avec succès ✓");
+    await refreshData();
+  } catch (err) {
+    toast(err.message || "Erreur lors de la création");
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "Créer / Activer mon compte Admin";
+  }
+};
+
+$("#btn-logout").onclick = async () => {
+  await API.logout();
+  CURRENT_ADMIN = null;
+  $("#login-screen").style.display = "flex";
+};
+
+$("#search-prod").oninput = renderProducts;
+$("#filter-cat").onchange = renderProducts;
+$("#btn-add-product").onclick = openAddModal;
+$("#modal-close").onclick = closeModal;
+$("#modal-cancel").onclick = closeModal;
+
+$("#p_file").onchange = async ev => {
+  const file = ev.target.files[0];
+  if (!file) return;
+  if (file.size > 4 * 1024 * 1024) return toast("Image trop lourde (4 Mo max)");
+
+  const btn = $("#btn-save-product");
+  btn.disabled = true;
+  btn.textContent = "Téléversement...";
+  try {
+    const url = await API.uploadImage(file);
+    $("#p_img_url").value = url;
+    $("#img-preview").innerHTML = `<img src="${esc(url)}" style="max-height:80px;border-radius:6px;border:1px solid var(--border)">`;
+    toast("Photo téléchargée avec succès ✓");
+  } catch (err) {
+    toast("Erreur d'envoi : " + err.message);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "Enregistrer l'article";
+  }
+};
+
+$("#form-product").onsubmit = async ev => {
+  ev.preventDefault();
+  const btn = $("#btn-save-product");
+  btn.disabled = true;
+  btn.textContent = "Enregistrement...";
+
+  try {
+    const id = $("#p_id").value ? +$("#p_id").value : null;
+    await API.saveProduct({
+      id,
+      name: $("#p_name").value.trim(),
+      cat: $("#p_cat").value,
+      emoji: $("#p_emoji").value.trim() || "📦",
+      price: +$("#p_price").value || 0,
+      old_price: +$("#p_old").value || 0,
+      stock: +$("#p_stock").value || 0,
+      display_order: +$("#p_order").value || 0,
+      active: $("#p_active").value === "true",
+      img_url: $("#p_img_url").value || null,
+      descr: $("#p_desc").value.trim(),
+    });
+    toast(id ? "Article mis à jour ✓" : "Nouvel article ajouté ✓");
+    closeModal();
+    await refreshData();
+  } catch (err) {
+    toast("Erreur : " + err.message);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "Enregistrer l'article";
+  }
+};
+
+$$(".menu button[data-view]").forEach(b => {
+  b.onclick = () => {
+    $$(".menu button").forEach(x => x.classList.remove("active"));
+    b.classList.add("active");
+    const v = b.dataset.view;
+    $("#view-products").style.display = v === "products" ? "block" : "none";
+    $("#view-users").style.display = v === "users" ? "block" : "none";
+  };
+});
+
+window.addEventListener("DOMContentLoaded", init);
+</script>
+</body>
+</html>
